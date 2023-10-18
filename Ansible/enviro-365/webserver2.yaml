@@ -1,0 +1,29 @@
+---
+- name: Install and Configure NGINX Load Balancer
+  hosts: web02
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install NGINX
+      apt:
+        name: nginx
+        state: present
+
+    - name: Configure NGINX as a Load Balancer
+      template:
+        src: nginx_load_balancer.conf.j2
+        dest: /etc/nginx/sites-available/load_balancer
+      notify: Reload NGINX
+
+    - name: Enable NGINX site
+      command: ln -s /etc/nginx/sites-available/load_balancer /etc/nginx/sites-enabled/
+      notify: Reload NGINX
+
+  handlers:
+    - name: Reload NGINX
+      systemd:
+        name: nginx
+        state: reloaded

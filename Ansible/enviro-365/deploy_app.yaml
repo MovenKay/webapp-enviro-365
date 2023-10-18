@@ -1,0 +1,41 @@
+---
+- name: Deploy Application on Ubuntu
+  hosts: web01
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Git and Dependencies
+      apt:
+        name:
+          - git
+          
+        state: present
+
+          # - name: Clone the Application Repository
+          #git:
+        # repo: https://github.com/Enviro-365/enviro-chat-app
+        #dest: /var/www/myapp
+        # version: master  # Change to a specific branch or tag if needed
+        #state: present
+
+    - name: Install Dependencies
+      npm:
+        path: /var/www/myapp
+
+    - name: Build or Compile the Application
+      shell: |
+        cd /var/www/myapp
+        cd chat-docker
+        npm install
+        npm start
+      async: 1000
+      poll: 0
+      ignore_errors: yes
+
+    - name: Start or Restart the Application Service
+      systemd:
+        name: systemd-user-sessions.service
+        state: restarted
