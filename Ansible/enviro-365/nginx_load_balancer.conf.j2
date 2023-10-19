@@ -1,11 +1,10 @@
 upstream webservers {
-    server 172.20.1.251;
-    server 172.20.2.83;
-}
+    server 3.252.202.157;
+    }
 
 server {
-    listen 80;
-    server_name www.netmoven.com;
+    listen 3000;
+    server_name 3.254.189.235;
 
     location / {
         proxy_pass http://webservers;
