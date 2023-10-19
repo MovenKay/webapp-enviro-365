@@ -9,8 +9,8 @@ resource "aws_instance" "ec2-1" {
 }
 resource "aws_instance" "ec2-2" {
   # (resource arguments)
-  ami           = "ami-01dd271720c1ba44f"
-  instance_type = "t2.micro"
+  ami           = "ami-0694d931cee176e7d"
+  instance_type = "t2.small"
   subnet_id     = aws_subnet.public_subnet-2.id
   tags = {
     Name = "Enviro-365-Instance2"
@@ -81,7 +81,13 @@ resource "aws_security_group" "sg" {
     cidr_blocks = ["0.0.0.0/0"]
 
   }
+ ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
 
+  }
 
   tags = {
     Name = "Enviro-365-SG"
@@ -128,7 +134,7 @@ resource "aws_default_network_acl" "default" {
 }
 
 resource "aws_lb" "nginx-lb" {
-  name               = "Enviro-365-APP-LB"
+  name               = "enviro-365-ap-lb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [ aws_security_group.sg.id]
